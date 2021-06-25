@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <style type="text/css">
+            .ui-row-editor .ui-row-editor-pencil {
+                margin-left:8px;
+            }
+        </style>
+
+        <h:body>
+
+            <ui:composition template="./template.xhtml">
+                <ui:define name="left">
+                    <h:form id="formLeft"> 
+
+
+                        <h:panelGrid>
+
+
+                            <p:outputLabel value="Nombre"/>
+                            <p:inputText value="#{dtEditViewAutores.newAutor.nombre}"/>
+
+                            <p:outputLabel value="Nacionalidad"/>
+                            <p:inputText value="#{dtEditViewAutores.newAutor.nacionalidad}"/>
+
+                            <p:outputLabel value="Telefono"/>
+                            <p:inputText value="#{dtEditViewAutores.newAutor.sexo}"/>
+
+
+
+                            <p:commandButton value="Save" action="#{dtEditViewAutores.botonAgregarAutores()}" update="form"  icon="pi pi-save"/>
+
+                        </h:panelGrid>
+                    </h:form>
+                </ui:define>
+
+                <ui:define name="content">
+                    <h:form id="form">
+
+                        <p:dataTable id="tbl-autores"  var="p" 
+                                     value="#{dtEditViewAutores.listaAutores}"  
+                                     rowKey="#{p.idAutor}"
+                                     selection="#{dtEditViewAutores.selectedAutor}"
+                                     editable="true" editMode="cell" 
+                                     widgetVar="cellAutores"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15"
+                                     emptyMessage="No items found with given criteria" 
+                                     filteredValue="#{dtEditViewAutores.filteredAutores}"
+
+
+                                     >
+
+                            <f:facet name="header">
+
+                                <h:outputText value="Data" />
+
+                            </f:facet>
+
+                            <p:ajax event="cellEdit"  process="@this" listener="#{dtEditViewAutores.onCellEdit}" update="tbl-autores, form:msgs">
+                                <f:setPropertyActionListener value="#{c}" target="#{dtEditViewAutores.selectedAutor}" />
+                            </p:ajax>
+
+                            <p:column headerText="Id" sortBy="#{p.idAutor}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.idAutor}" /></f:facet>
+                                    <f:facet name="input"><p:inputText  disabled="true" value="#{p.idAutor}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Nombre" sortBy="#{p.nombre}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.nombre}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.nombre}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Dui" sortBy="#{p.nacionalidad}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.nacionalidad}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.nacionalidad}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Telefono" sortBy="#{p.sexo}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.sexo}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.sexo}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+
+
+                            <p:column style="width: 50px; text-align: center" headerText="Delete">
+                                <p:commandButton update=":form" action="#{dtEditViewAutores.botonEliminar()}" icon="pi pi-trash" title="Delete">
+                                    <f:setPropertyActionListener value="#{p}" target="#{dtEditViewAutores.toDelete}"/>
+                                </p:commandButton>
+                            </p:column>
+
+
+
+                        </p:dataTable>
+                        <p:messages id="msgs" showDetail="true"  closable="true"/>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <p:commandButton title="Add new row" icon="pi pi-plus" process="@this" update=":form:msgs"
+                                                 action="#{dtEditViewAutores.onAddNew}" oncomplete="PF('cellAutores').addRow();" />
+                            </div>
+                        </div>
+
+                    </h:form>
+                </ui:define>
+            </ui:composition>
+        </h:body>
+
+    </h:body>
+
+</html>

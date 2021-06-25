@@ -1,0 +1,1 @@
+si algun dia tenes que usar otra vez secuencias con jpa, deshabilitar los triggers

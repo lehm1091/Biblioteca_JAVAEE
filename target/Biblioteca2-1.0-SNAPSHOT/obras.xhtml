@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <style type="text/css">
+            .ui-row-editor .ui-row-editor-pencil {
+                margin-left:8px;
+            }
+        </style>
+
+        <h:body>
+
+            <ui:composition template="./template.xhtml">
+                <ui:define name="left">
+                    <h:form id="formLeft"> 
+
+
+                        <h:panelGrid>
+
+
+                            <p:outputLabel value="Titulo"/>
+                            <p:inputText value="#{dtEditViewObras.newObra.titulo}"/>
+
+                            <p:outputLabel value="Nacionalidad"/>
+                            <p:inputText value="#{dtEditViewObras.newObra.nacionalidad}"/>
+
+                            <p:outputLabel value="Editora"/>
+                            <p:inputText value="#{dtEditViewObras.newObra.editora}"/>
+
+                            <p:outputLabel value="Fecha Publicacion"/>
+                            <p:datePicker value="#{dtEditViewObras.newObra.fechaPublicacion}" >
+
+                            </p:datePicker>
+
+
+                            <p:outputLabel value="Autores"/>
+                            <p:selectManyMenu id="advanced" value="#{dtEditViewObras.autoresBean.filteredAutores}" converter="#{AutorConverter}"
+                                              var="t" filter="true" filterMatchMode="contains" showCheckbox="true">
+                                <f:selectItems value="#{dtEditViewObras.autoresBean.listaAutores}" var="a" itemLabel="#{a.nombre}" itemValue="#{a}" />
+
+
+                                <h:outputText style="color:black !important" value="#{a.nombre}" />
+
+                            </p:selectManyMenu>
+
+
+                            <p:commandButton value="Save" action="#{dtEditViewObras.botonAgregarObras()}" update="form"  icon="pi pi-save"/>
+
+                        </h:panelGrid>
+                    </h:form>
+                </ui:define>
+
+                <ui:define name="content">
+                    <h:form id="form">
+
+                        <p:dataTable id="tbl-autores"  var="p" 
+                                     value="#{dtEditViewObras.listaObras}"  
+                                     rowKey="#{p.idObra}"
+                                     selection="#{dtEditViewObras.selectedObra}"
+                                     editable="true" editMode="cell" 
+                                     widgetVar="cellObraes"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15"
+                                     emptyMessage="No items found with given criteria" 
+                                     filteredValue="#{dtEditViewObras.filteredObras}"
+
+
+                                     >
+
+                            <f:facet name="header">
+
+                                <h:outputText value="Data" />
+
+                            </f:facet>
+
+                            <p:ajax event="cellEdit"  process="@this" listener="#{dtEditViewObras.onCellEdit}" update="tbl-autores, form:msgs">
+                                <f:setPropertyActionListener value="#{c}" target="#{dtEditViewObras.selectedObra}" />
+                            </p:ajax>
+
+                            <p:column headerText="Id" sortBy="#{p.idObra}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.idObra}" /></f:facet>
+                                    <f:facet name="input"><p:inputText  disabled="true" value="#{p.idObra}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Nombre" sortBy="#{p.titulo}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.titulo}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.titulo}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Nacionalidad" sortBy="#{p.nacionalidad}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.nacionalidad}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.nacionalidad}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Editora" sortBy="#{p.editora}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.editora}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.editora}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Publicacion" sortBy="#{p.fechaPublicacion}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.fechaPublicacion}" >
+                                            <f:convertDateTime pattern="dd/MM/yy" />
+                                        </h:outputText></f:facet>
+                                    <f:facet name="input" ><p:inputText value="#{p.fechaPublicacion}" disabled="true" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+
+
+                            <p:column style="width: 50px; text-align: center" headerText="Delete">
+                                <p:commandButton update=":form" action="#{dtEditViewObras.botonEliminar()}" icon="pi pi-trash" title="Delete">
+                                    <f:setPropertyActionListener value="#{p}" target="#{dtEditViewObras.toDelete}"/>
+                                </p:commandButton>
+                            </p:column>
+
+
+
+                        </p:dataTable>
+                        <p:messages id="msgs" showDetail="true"  closable="true"/>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <p:commandButton title="Add new row" icon="pi pi-plus" process="@this" update=":form:msgs"
+                                                 action="#{dtEditViewObras.onAddNew}" oncomplete="PF('cellObraes').addRow();" />
+                            </div>
+                        </div>
+
+                    </h:form>
+                </ui:define>
+            </ui:composition>
+        </h:body>
+
+    </h:body>
+
+</html>

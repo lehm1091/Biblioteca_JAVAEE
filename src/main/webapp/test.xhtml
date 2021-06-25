@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+
+    <h:body>
+        <h2>Primefaces Simple Dialog Example</h2>
+
+        <h3>test <h:outputText value="#{dtEditViewUsuarios.log}" /></h3>
+        <h:form>
+            <h:body>  
+                <h2><h:outputText value="Product List"></h:outputText></h2>  
+                <h:dataTable value="#{dtEditViewUsuarios.listaUsuarios}" var="u">  
+                    <h:column>  
+                        <f:facet name="header">ID</f:facet>  
+                        <h:outputText value="#{u.idUsuario}"/>  
+                    </h:column>  
+                    <h:column>  
+                        <f:facet name="header">Nombre</f:facet>  
+                        <h:outputText value="#{u.nombre}"/>  
+                    </h:column>  
+                    <h:column>  
+                        <f:facet name="header">Direccion</f:facet>  
+                        <h:outputText value="#{u.direccion}"/>  
+                    </h:column>  
+                </h:dataTable>  
+            </h:body>  
+        </h:form>
+
+    </h:body>
+
+</html>

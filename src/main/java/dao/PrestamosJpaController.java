@@ -49,6 +49,7 @@ public class PrestamosJpaController implements Serializable {
                 prestamos.setIdUsuario(idUsuario);
             }
             em.persist(prestamos);
+            System.out.println(prestamos.toString());
             if (idEjemplar != null) {
                 idEjemplar.getPrestamosList().add(prestamos);
                 idEjemplar = em.merge(idEjemplar);

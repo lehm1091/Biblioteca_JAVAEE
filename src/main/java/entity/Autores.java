@@ -13,12 +13,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -41,6 +44,8 @@ public class Autores implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Column(name = "ID_AUTOR")
+    @GeneratedValue(generator = "sec_autores", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "sec_autores", sequenceName = "autores_seq", allocationSize = 1)
     private BigDecimal idAutor;
     @Size(max = 100)
     private String nombre;
@@ -51,7 +56,7 @@ public class Autores implements Serializable {
     @JoinTable(name = "AUTORES_OBRAS", joinColumns = {
         @JoinColumn(name = "ID_AUTOR", referencedColumnName = "ID_AUTOR")}, inverseJoinColumns = {
         @JoinColumn(name = "ID_OBRA", referencedColumnName = "ID_OBRA")})
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Obras> obrasList;
 
     public Autores() {
@@ -133,6 +138,4 @@ public class Autores implements Serializable {
         return sb.toString();
     }
 
-   
-    
 }

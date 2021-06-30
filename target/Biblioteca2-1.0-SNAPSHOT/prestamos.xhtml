@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <style type="text/css">
+            .ui-row-editor .ui-row-editor-pencil {
+                margin-left:8px;
+            }
+        </style>
+
+        <h:body>
+
+            <ui:composition template="./template.xhtml">
+                <ui:define name="left">
+                    <h:form id="formLeft"> 
+
+
+                        <h:panelGrid>
+
+
+
+
+                            <p:outputLabel value="Fecha Prestamo"/>
+                            <p:datePicker value="#{dtEditViewPrestamos.newPrestamo.fechaPrestamo}" >
+
+                            </p:datePicker>
+
+
+                            <p:outputLabel value="Usuario"/>
+
+                            <p:selectOneListbox  value="#{dtEditViewPrestamos.usuariosBean.selectedUsuario}" converter="usuariosConverter" var="u" filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{dtEditViewPrestamos.usuariosBean.listaUsuarios}" var="usuario" itemLabel="#{usuario.dui} #{usuario.nombre}" itemValue="#{usuario}" />
+
+
+
+                                <p:column>
+                                    <h:outputText value="#{u.dui} #{u.nombre}" />
+                                </p:column>
+                            </p:selectOneListbox>
+
+                            <p:outputLabel value="Ejemplar"/>
+
+                            <p:selectOneListbox  value="#{dtEditViewPrestamos.ejemplaresBean.selectedEjemplar}" converter="ejemplaresConverter" var="e" filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{dtEditViewPrestamos.ejemplaresBean.listaEjemplares}" var="ejemplar" itemLabel="#{ejemplar.numeroEjemplar} #{ejemplar.obra.titulo}" itemValue="#{ejemplar}" />
+
+
+
+                                <p:column>
+                                    <h:outputText value="#{e.numeroEjemplar} #{e.obra.titulo}" />
+                                </p:column>
+                            </p:selectOneListbox>
+
+
+
+
+
+
+
+                            <p:commandButton value="Save" action="#{dtEditViewPrestamos.botonAgregarPrestamos()}" update="form"  icon="pi pi-save"/>
+
+                        </h:panelGrid>
+                    </h:form>
+                </ui:define>
+
+                <ui:define name="content">
+                    <h:form id="form">
+
+                        <p:dataTable id="tbl-autores"  var="p" 
+                                     value="#{dtEditViewPrestamos.listaPrestamos}"  
+                                     rowKey="#{p.idPrestamo}"
+                                     selection="#{dtEditViewPrestamos.selectedPrestamo}"
+                                     editable="true" editMode="cell" 
+                                     widgetVar="cellObraes"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15"
+                                     emptyMessage="No items found with given criteria" 
+                                     filteredValue="#{dtEditViewPrestamos.filteredPrestamos}"
+
+
+                                     >
+
+                            <f:facet name="header">
+
+                                <h:outputText value="Data" />
+
+                            </f:facet>
+
+                            <p:ajax event="cellEdit"  process="@this" listener="#{dtEditViewPrestamos.onCellEdit}" update="tbl-autores, form:msgs">
+                                <f:setPropertyActionListener value="#{c}" target="#{dtEditViewPrestamos.selectedPrestamo}" />
+                            </p:ajax>
+
+                            <p:column headerText="Id" sortBy="#{p.idPrestamo}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.idPrestamo}" /></f:facet>
+                                    <f:facet name="input"><p:inputText  disabled="true" value="#{p.idPrestamo}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="numero Ejemplar" sortBy="#{p.idEjemplar.numeroEjemplar}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.idEjemplar.numeroEjemplar}" /></f:facet>
+                                    <f:facet name="input"><p:inputText disabled="true" value="#{p.idEjemplar.numeroEjemplar}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="titulo obra" sortBy="#{p.idEjemplar.obra.titulo}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.idEjemplar.obra.titulo}" /></f:facet>
+                                    <f:facet name="input"><p:inputText disabled="true" value="#{p.idEjemplar.obra.titulo}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Fecha Prestamo" sortBy="#{p.fechaPrestamo}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.fechaPrestamo}" >
+                                            <f:convertDateTime pattern="dd/MM/yy" />
+                                        </h:outputText></f:facet>
+                                    <f:facet name="input" ><p:inputText value="#{p.fechaPrestamo}" disabled="true" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+
+                            <p:column headerText="fecha Devolucion" sortBy="#{p.fechaDevolucion}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.fechaDevolucion}" >
+                                            <f:convertDateTime pattern="dd/MM/yy" />
+                                        </h:outputText></f:facet>
+                                    <f:facet name="input" ><p:inputText value="#{p.fechaDevolucion}" disabled="true" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+
+                            <p:column style="width: 50px; text-align: center" headerText="Delete">
+                                <p:commandButton update=":form" action="#{dtEditViewPrestamos.botonEliminar()}" icon="pi pi-trash" title="Delete">
+                                    <f:setPropertyActionListener value="#{p}" target="#{dtEditViewPrestamos.toDelete}"/>
+                                </p:commandButton>
+                            </p:column>
+
+                            <p:column style="width: 50px; text-align: center" headerText="Devuelto">
+                                <p:commandButton update=":form" action="#{dtEditViewPrestamos.marcarPrestamoComoDevuelto()}" icon="pi pi-check" title="Marcar como devuelto">
+                                    <f:setPropertyActionListener value="#{p}" target="#{dtEditViewPrestamos.selectedPrestamo}"/>
+                                </p:commandButton>
+                            </p:column>
+
+
+
+                        </p:dataTable>
+                        <p:messages id="msgs" showDetail="true"  closable="true"/>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+
+                            </div>
+                        </div>
+
+                    </h:form>
+                </ui:define>
+            </ui:composition>
+        </h:body>
+
+    </h:body>
+
+</html>

@@ -43,14 +43,24 @@
 
 
                             <p:outputLabel value="Autores"/>
-                            <p:selectManyMenu id="advanced" value="#{dtEditViewObras.autoresBean.filteredAutores}" converter="#{AutorConverter}"
-                                              var="t" filter="true" filterMatchMode="contains" showCheckbox="true">
+
+                            <p:selectManyMenu value="#{dtEditViewObras.autoresBean.filteredAutores}" converter="#{autoresConverter}"
+                                              var="t" filter="true" filterMatchMode="contains" showCheckbox="true" scrollHeight="100">
                                 <f:selectItems value="#{dtEditViewObras.autoresBean.listaAutores}" var="a" itemLabel="#{a.nombre}" itemValue="#{a}" />
 
 
-                                <h:outputText style="color:black !important" value="#{a.nombre}" />
+                                <p:column>
+                                    <h:outputText value="#{t.nombre}" />
+                                </p:column>
 
                             </p:selectManyMenu>
+
+                         
+
+
+
+
+
 
 
                             <p:commandButton value="Save" action="#{dtEditViewObras.botonAgregarObras()}" update="form"  icon="pi pi-save"/>

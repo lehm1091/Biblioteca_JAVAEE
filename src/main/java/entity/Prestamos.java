@@ -12,11 +12,14 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,9 +41,9 @@ public class Prestamos implements Serializable {
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ID_PRESTAMO")
+    @GeneratedValue(generator = "sec_prestamo", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "sec_prestamo", sequenceName = "prestamos_seq", allocationSize = 1)
     private BigDecimal idPrestamo;
     @Column(name = "FECHA_PRESTAMO")
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,10 +52,10 @@ public class Prestamos implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaDevolucion;
     @JoinColumn(name = "ID_EJEMPLAR", referencedColumnName = "ID_EJEMPLAR")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Ejemplares idEjemplar;
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuarios idUsuario;
 
     public Prestamos() {
@@ -126,5 +129,5 @@ public class Prestamos implements Serializable {
     public String toString() {
         return "entity.Prestamos[ idPrestamo=" + idPrestamo + " ]";
     }
-    
+
 }

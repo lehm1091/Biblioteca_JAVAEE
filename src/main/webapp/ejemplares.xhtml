@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <style type="text/css">
+            .ui-row-editor .ui-row-editor-pencil {
+                margin-left:8px;
+            }
+        </style>
+
+        <h:body>
+
+            <ui:composition template="./template.xhtml">
+                <ui:define name="left">
+                    <h:form id="formLeft"> 
+
+
+                        <h:panelGrid>
+
+
+                            <p:outputLabel value="Numero Ejemplar"/>
+                            <p:inputText value="#{dtEditViewEjemplares.newEjemplar.numeroEjemplar}"/>
+
+                            <p:outputLabel value="Estado Conservacion"/>
+                            <p:inputText value="#{dtEditViewEjemplares.newEjemplar.estadoConservacion}"/>
+
+                            <p:outputLabel value="Obra"/>
+
+                            <p:selectOneListbox  value="#{dtEditViewEjemplares.obrasBean.newObra}" converter="obrasConverter" var="t" filter="true" filterMatchMode="contains">
+                                <f:selectItems value="#{dtEditViewEjemplares.obrasBean.listaObras}" var="theme" itemLabel="#{theme.titulo}" itemValue="#{theme}" />
+
+                               
+
+                                <p:column>
+                                    <h:outputText value="#{t.titulo}" />
+                                </p:column>
+                            </p:selectOneListbox>
+
+
+
+
+
+
+
+
+                            <p:commandButton value="Save" action="#{dtEditViewEjemplares.botonAgregarEjemplares()}" update="form"  icon="pi pi-save"/>
+
+                        </h:panelGrid>
+                    </h:form>
+                </ui:define>
+
+                <ui:define name="content">
+                    <h:form id="form">
+
+                        <p:dataTable id="tbl-ejemplares"  var="p" 
+                                     value="#{dtEditViewEjemplares.listaEjemplares}"  
+                                     rowKey="#{p.idEjemplar}"
+                                     selection="#{dtEditViewEjemplares.selectedEjemplar}"
+                                     editable="true" editMode="cell" 
+                                     widgetVar="cellEjemplares"
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15"
+                                     emptyMessage="No items found with given criteria" 
+                                     filteredValue="#{dtEditViewEjemplares.filteredEjemplares}"
+
+
+                                     >
+
+                            <f:facet name="header">
+
+                                <h:outputText value="Data" />
+
+                            </f:facet>
+
+                            <p:ajax event="cellEdit"  process="@this" listener="#{dtEditViewEjemplares.onCellEdit}" update="tbl-ejemplares, form:msgs">
+                                <f:setPropertyActionListener value="#{c}" target="#{dtEditViewEjemplares.selectedEjemplar}" />
+                            </p:ajax>
+
+                            <p:column headerText="Id" sortBy="#{p.idEjemplar}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.idEjemplar}" /></f:facet>
+                                    <f:facet name="input"><p:inputText  disabled="true" value="#{p.idEjemplar}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Numero Ejemplar" sortBy="#{p.numeroEjemplar}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.numeroEjemplar}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.numeroEjemplar}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+                            <p:column headerText="Estado conservacion" sortBy="#{p.estadoConservacion}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.estadoConservacion}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{p.estadoConservacion}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+
+
+                            <p:column headerText="Obra" sortBy="#{p.obra.titulo}">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{p.obra.titulo}" >
+
+                                        </h:outputText></f:facet>
+                                    <f:facet name="input" ><p:inputText  value="#{p.obra.titulo}" disabled="true" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+
+
+
+                            <p:column style="width: 50px; text-align: center" headerText="Delete">
+                                <p:commandButton update=":form" action="#{dtEditViewEjemplares.botonEliminar()}" icon="pi pi-trash" title="Delete">
+                                    <f:setPropertyActionListener value="#{p}" target="#{dtEditViewEjemplares.toDelete}"/>
+                                </p:commandButton>
+                            </p:column>
+
+
+
+                        </p:dataTable>
+                        <p:messages id="msgs" showDetail="true"  closable="true"/>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <p:commandButton title="Add new row" icon="pi pi-plus" process="@this" update=":form:msgs"
+                                                 action="#{dtEditViewEjemplares.onAddNew}" oncomplete="PF('cellEjemplares').addRow();" />
+                            </div>
+                        </div>
+
+                    </h:form>
+                </ui:define>
+            </ui:composition>
+        </h:body>
+
+    </h:body>
+
+</html>

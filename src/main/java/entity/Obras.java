@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -56,8 +57,12 @@ public class Obras implements Serializable {
     private Date fechaPublicacion;
     @ManyToMany(mappedBy = "obrasList", fetch = FetchType.LAZY)
     private List<Autores> autoresList;
+    
+    @OneToMany(mappedBy = "obra", fetch = FetchType.LAZY)
+    private List<Ejemplares> ejemplaresList;
 
     public Obras() {
+        fechaPublicacion=new Date();
     }
 
     public Obras(BigDecimal idObra) {
@@ -134,7 +139,30 @@ public class Obras implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Obras[ idObra=" + idObra + " ]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Obras{idObra=").append(idObra);
+        sb.append(", titulo=").append(titulo);
+        sb.append(", nacionalidad=").append(nacionalidad);
+        sb.append(", editora=").append(editora);
+        sb.append(", fechaPublicacion=").append(fechaPublicacion);
+        sb.append('}');
+        return sb.toString();
+    }
+
+   
+
+    /**
+     * @return the ejemplaresList
+     */
+    public List<Ejemplares> getEjemplaresList() {
+        return ejemplaresList;
+    }
+
+    /**
+     * @param ejemplaresList the ejemplaresList to set
+     */
+    public void setEjemplaresList(List<Ejemplares> ejemplaresList) {
+        this.ejemplaresList = ejemplaresList;
     }
 
 }

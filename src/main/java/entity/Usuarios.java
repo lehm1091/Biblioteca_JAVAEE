@@ -12,12 +12,15 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -41,6 +44,8 @@ public class Usuarios implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Column(name = "ID_USUARIO")
+    @GeneratedValue(generator="sec_usuario", strategy=GenerationType.SEQUENCE)
+    @SequenceGenerator(name="sec_usuario",sequenceName="usuarios_seq",allocationSize=1)
     private BigDecimal idUsuario;
     @Size(max = 100)
     private String dui;

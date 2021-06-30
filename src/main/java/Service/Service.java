@@ -41,4 +41,20 @@ public interface Service {
 
     public boolean update(Obras o);
 
+    public List<Ejemplares> findAllEjemplares();
+
+    public boolean save(Ejemplares e);
+
+    public boolean delete(Ejemplares e);
+
+    public boolean update(Ejemplares e);
+
+    public List<Prestamos> findAllPrestamos();
+
+    public boolean save(Prestamos p);
+
+    public boolean delete(Prestamos p);
+
+    public boolean update(Prestamos p);
+
 }
